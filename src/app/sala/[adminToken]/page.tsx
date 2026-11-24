@@ -32,7 +32,7 @@ export default async function AdminRoomPage({ params }: AdminRoomPageProps) {
 
   return (
     <div className="space-y-6">
-      <AdminRoomControls adminToken={group.adminToken} />
+      <AdminRoomControls adminToken={group.adminToken} groupName={group.name} />
 
       {/* Encabezado del grupo */}
       <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm space-y-4">

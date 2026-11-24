@@ -1,21 +1,33 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { deleteSecretSantaGroup } from "@/actions/gameActions";
+import { saveEventToHistory, removeEventFromHistory } from "@/lib/localHistory";
 import { PlusCircle, Trash2, Copy, Check } from "lucide-react";
 
 interface AdminRoomControlsProps {
   adminToken: string;
+  groupName: string;
 }
 
 export default function AdminRoomControls({
   adminToken,
+  groupName,
 }: AdminRoomControlsProps) {
   const router = useRouter();
   const [deleting, setDeleting] = useState(false);
   const [copiedAdmin, setCopiedAdmin] = useState(false);
+
+  useEffect(() => {
+    saveEventToHistory({
+      id: adminToken,
+      role: "admin",
+      groupName,
+      url: `/sala/${adminToken}`,
+    });
+  }, [adminToken, groupName]);
 
   const handleCopyAdminLink = async () => {
     await navigator.clipboard.writeText(window.location.href);
@@ -33,6 +45,7 @@ export default function AdminRoomControls({
     const res = await deleteSecretSantaGroup(adminToken);
 
     if (res.success) {
+      removeEventFromHistory(adminToken);
       router.push("/");
     } else {
       alert(res.error || "Error al eliminar");
