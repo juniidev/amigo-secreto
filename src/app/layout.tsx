@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import { Analytics } from "@vercel/analytics/react";
 import FooterCopyright from "@/components/FooterCopyright";
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Amigo Secreto | Organiza tu intercambio sin enredos",
+  title: "AQuien | Organiza tu amigo secreto sin enredos",
   description:
     "Crea tu sorteo de amigo secreto en segundos, configura exclusiones y comparte los enlaces directos por WhatsApp.",
 };
@@ -26,6 +27,7 @@ export default function RootLayout({
         </main>
 
         <FooterCopyright />
+        <Analytics />
       </body>
     </html>
   );
