@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { motion } from "framer-motion";
 import confetti from "canvas-confetti";
 import { markParticipantAsViewed, updateWishlist } from "@/actions/gameActions";
@@ -13,6 +12,10 @@ import {
   Wallet,
   EyeOff,
 } from "lucide-react";
+
+import { useState, useEffect } from "react";
+import Link from "next/link";
+import { saveEventToHistory } from "@/lib/localHistory";
 
 interface RevealCardProps {
   participantToken: string;
@@ -41,6 +44,16 @@ export default function RevealCard({
   const [wishlist, setWishlist] = useState(initialWishlist || "");
   const [saving, setSaving] = useState(false);
   const [savedSuccess, setSavedSuccess] = useState(false);
+
+  useEffect(() => {
+    saveEventToHistory({
+      id: participantToken,
+      role: "guest",
+      groupName,
+      participantName,
+      url: `/revelar/${participantToken}`,
+    });
+  }, [participantToken, groupName, participantName]);
 
   const handleReveal = async () => {
     setIsRevealed(true);
@@ -210,6 +223,23 @@ export default function RevealCard({
           </button>
         </div>
       </form>
+      {/* Invitación viral para que el participante cree su propio sorteo */}
+      <div className="rounded-2xl border border-rose-100 bg-linear-br from-rose-50 to-white p-5 text-center space-y-3">
+        <p className="text-sm font-semibold text-slate-800">
+          ¿Quieres organizar tu propio intercambio?
+        </p>
+        <p className="text-xs text-slate-500">
+          Arma tu grupo con familia, amigos o en la oficina en menos de un
+          minuto. Gratis y sin registros.
+        </p>
+        <Link
+          href="/"
+          className="inline-flex items-center justify-center gap-2 rounded-xl bg-rose-600 px-5 py-2.5 text-xs font-semibold text-white shadow-sm hover:bg-rose-700 transition"
+        >
+          <Sparkles className="h-4 w-4" />
+          Crear mi propio sorteo gratis
+        </Link>
+      </div>
     </div>
   );
 }

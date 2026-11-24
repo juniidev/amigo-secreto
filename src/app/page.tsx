@@ -1,5 +1,6 @@
 import CreateGroupForm from "@/components/CreateGroupForm";
 import { Gift } from "lucide-react";
+import MyEventsList from "@/components/MyEventsList";
 
 export default function HomePage() {
   return (
@@ -16,7 +17,7 @@ export default function HomePage() {
           quién y envía los resultados directos por WhatsApp.
         </p>
       </header>
-
+      <MyEventsList />
       <CreateGroupForm />
     </div>
   );
