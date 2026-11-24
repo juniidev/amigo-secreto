@@ -1,0 +1,38 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+
+model Group {
+  id           String        @id @default(cuid())
+  name         String        // Ej: "Navidad Oficina 2026"
+  budget       String?       // Ej: "₡15,000" o "$20"
+  eventDate    String?       // Ej: "24 de Diciembre"
+  adminToken   String        @unique @default(uuid()) // Link secreto del organizador
+  createdAt    DateTime      @default(now())
+  participants Participant[]
+}
+
+model Participant {
+  id         String   @id @default(cuid())
+  name       String
+  token      String   @unique @default(uuid()) // Link único de WhatsApp
+  wishlist   String?  // Ideas de regalo que escribe el participante
+  hasViewed  Boolean  @default(false) // Para que el organizador sepa quién ya abrió su link
+  
+  groupId    String
+  group      Group    @relation(fields: [groupId], references: [id], onDelete: Cascade)
+
+  // Relación de a quién le regala
+  assignedToId String?       @unique
+  assignedTo   Participant?  @relation("SecretSantaPair", fields: [assignedToId], references: [id])
+  assignedFrom Participant?  @relation("SecretSantaPair")
+
+  // Exclusiones (ej: IDs de pareja o hermanos separados por coma)
+  excludedIds  String?
+}
